@@ -1,0 +1,47 @@
+substitutions:
+  devicename: flora
+  sensor_throttle: 10min
+
+esphome:
+  name: $devicename
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# include shared components
+packages:
+  connectivity: !include common/connectivity.yaml
+  mqtt: !include common/mqtt.yaml
+
+# Enable logging
+logger:
+
+mqtt:
+  client_id: $devicename
+  on_message:
+    - topic: "${mqtt_topic_prefix}/deepsleep"
+      payload: 'OFF'
+      then:
+        - deep_sleep.prevent: ds_1
+    - topic: "${mqtt_topic_prefix}/deepsleep"
+      payload: 'ON'
+      then:
+        - deep_sleep.enter: ds_1
+
+deep_sleep:
+  run_duration: 2min
+  sleep_duration: 28min
+  id: ds_1
+
+# enable BLE tracker component, required for
+esp32_ble_tracker:
+  scan_parameters:
+    active: false
+
+sensor:
+  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'A', mac_address: 'c4:7c:8d:6d:7b:ab' } }
+  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'B', mac_address: 'c4:7c:8d:6c:51:6a' } }
+  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'C', mac_address: 'c4:7c:8d:6d:7b:a0' } }
+  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'D', mac_address: 'c4:7c:8d:6d:79:d5' } }

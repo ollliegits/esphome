@@ -1,0 +1,17 @@
+substitutions:
+  mqtt_topic_prefix: "oscdis/f"
+
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  username: !secret mqtt_username
+  password: !secret mqtt_pwd
+  discovery: false
+  # to disable logging over mqtt: place empty 'log_topic:'
+  log_topic:
+    topic: "${mqtt_topic_prefix}/log"
+    level: warn
+  # disable publish of 'online' to '/status'
+  birth_message:
+  keepalive: 10min
+  topic_prefix: ${mqtt_topic_prefix}

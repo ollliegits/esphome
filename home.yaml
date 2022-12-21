@@ -1,0 +1,94 @@
+substitutions:
+  mqtt_topic_prefix: "oscdis/f"
+  sensor_throttle: 1min
+  devicename: thermo
+
+esphome:
+  name: $devicename
+  name_add_mac_suffix: true
+
+esp32:
+  board: lolin32_lite
+  framework:
+    type: arduino
+
+# include shared components
+packages:
+  connectivity: !include common/connectivity.yaml
+  mqtt: !include common/mqtt.yaml
+
+# Enable logging
+logger:
+
+mqtt:
+  client_id: $devicename
+
+i2c:
+   - id: bus_a
+     sda: 19
+     scl: 22
+     scan: true
+
+sensor:
+  - platform: htu21d
+    i2c_id: bus_a
+    temperature:
+      name: "Room Temperature"
+      id: htu_temp
+      filters:
+        throttle: $sensor_throttle
+      state_topic: ${mqtt_topic_prefix}/temp"
+    humidity:
+      name: "Room Humidity"
+      id: htu_hum
+      filters:
+        throttle: $sensor_throttle
+      state_topic: ${mqtt_topic_prefix}/hum"
+    update_interval: 60s
+
+graph:
+  - id: temp_graph
+    duration: 1h
+    x_grid: 15min
+    y_grid: 5.0
+    width: 128
+    height: 48
+    traces:
+      - sensor: htu_temp
+        line_type: SOLID
+        line_thickness: 3
+      - sensor: htu_hum
+        line_type: DASHED
+        line_thickness: 2
+
+font:
+  - file: "gfonts://Roboto"
+    id: f1
+    size: 16
+
+display:
+  - platform: ssd1306_i2c
+    id: my_display
+    model: "SSD1306 128x64"
+    update_interval: 60s
+    flip_x: false
+    flip_y: false
+    lambda: |-
+      it.graph(0, 16, id(temp_graph));
+
+      // Print time in HH:MM format
+      //it.strftime(0, 60, id(font2), TextAlign::BASELINE_LEFT, "%H:%M", id(esptime).now());
+
+      // Print inside temperature (from homeassistant sensor)
+      if (id(htu_temp).has_state()) {
+        it.printf(0, 0, id(f1), TextAlign::TOP_LEFT , "%.1f°C", id(htu_temp).state);
+      }
+
+      if (id(htu_hum).has_state()) {
+        it.printf(127, 0, id(f1), TextAlign::TOP_RIGHT , "%.1f %%", id(htu_hum).state);
+      }
+
+switch:
+  - platform: gpio
+    name: "Living Room Dehumidifier"
+    pin: 5
