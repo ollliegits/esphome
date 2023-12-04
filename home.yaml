@@ -1,7 +1,7 @@
 substitutions:
   mqtt_topic_prefix: "oscdis/f"
   sensor_throttle: 1min
-  interval: 3min
+  interval: 10min
   devicename: thermo
 
 esphome:
@@ -92,7 +92,7 @@ display:
   - platform: ssd1306_i2c
     id: my_display
     model: "SSD1306 128x64"
-    update_interval: 10s  # $interval
+    update_interval: 10s
     flip_x: false
     flip_y: false
     lambda: |-
