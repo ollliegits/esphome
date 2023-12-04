@@ -1,6 +1,7 @@
 substitutions:
   mqtt_topic_prefix: "oscdis/f"
   sensor_throttle: 1min
+  interval: 3min
   devicename: thermo
 
 esphome:
@@ -48,7 +49,7 @@ sensor:
       filters:
         throttle: $sensor_throttle
       state_topic: ${mqtt_topic_prefix}/hum"
-    update_interval: 60s
+    update_interval: $interval
 
 graph:
   - id: temp_graph
@@ -74,7 +75,7 @@ display:
   - platform: ssd1306_i2c
     id: my_display
     model: "SSD1306 128x64"
-    update_interval: 60s
+    update_interval: 10s  # $interval
     flip_x: false
     flip_y: false
     lambda: |-
