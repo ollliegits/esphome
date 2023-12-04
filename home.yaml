@@ -6,7 +6,7 @@ substitutions:
 
 esphome:
   name: $devicename
-  name_add_mac_suffix: true
+  # name_add_mac_suffix: true
 
 esp32:
   board: lolin32_lite
@@ -93,8 +93,3 @@ display:
       if (id(htu_hum).has_state()) {
         it.printf(127, 0, id(f1), TextAlign::TOP_RIGHT , "%.1f %%", id(htu_hum).state);
       }
-
-switch:
-  - platform: gpio
-    name: "Living Room Dehumidifier"
-    pin: 5
