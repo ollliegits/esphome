@@ -8,8 +8,8 @@
     filters:
       throttle: ${sensor_throttle}
     state_topic: "${mqtt_topic_prefix}/${id}_temp"
-  moisture:
-    name: "Flower ${id} Moisture"
-    filters:
-      throttle: ${sensor_throttle}
-    state_topic: "${mqtt_topic_prefix}/${id}_moist"
+  # moisture:
+  #   name: "Flower ${id} Moisture"
+  #   filters:
+  #     throttle: ${sensor_throttle}
+  #   state_topic: "${mqtt_topic_prefix}/${id}_moist"
