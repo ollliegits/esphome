@@ -22,3 +22,4 @@ web_server:
 
 # Disable Home Assistant API
 api:
+  reboot_timeout: 0s
