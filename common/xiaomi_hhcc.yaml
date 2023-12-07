@@ -1,6 +1,7 @@
 # required vars:
 #   mac_address: ble device mac address
 #   id: short alphnumeric id, used in mqtt topic name
+#   sensor_throttle: time period, e.g. 1min, 30s
 - platform: xiaomi_hhccjcy01
   mac_address: ${mac_address}
   temperature:
