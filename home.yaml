@@ -35,10 +35,10 @@ time:
           - esp32_ble_tracker.start_scan:
 
 i2c:
-   - id: bus_a
-     sda: 19
-     scl: 22
-     scan: true
+  - id: bus_a
+    sda: 19
+    scl: 22
+    scan: true
 
 # enable BLE tracker component, required for
 esp32_ble_tracker:
@@ -68,10 +68,26 @@ sensor:
         throttle: $sensor_throttle
       state_topic: ${mqtt_topic_prefix}/hum"
     update_interval: $interval
-  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'A', mac_address: 'c4:7c:8d:6d:7b:ab' } }
-  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'B', mac_address: 'c4:7c:8d:6c:51:6a' } }
-  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'C', mac_address: 'c4:7c:8d:6d:7b:a0' } }
-  - <<: !include { file: common/xiaomi_hhcc.yaml, vars: { id: 'D', mac_address: 'c4:7c:8d:6d:79:d5' } }
+  - <<:
+      !include {
+        file: common/xiaomi_hhcc.yaml,
+        vars: { id: "A", mac_address: "c4:7c:8d:6d:7b:ab" },
+      }
+  - <<:
+      !include {
+        file: common/xiaomi_hhcc.yaml,
+        vars: { id: "B", mac_address: "c4:7c:8d:6c:51:6a" },
+      }
+  - <<:
+      !include {
+        file: common/xiaomi_hhcc.yaml,
+        vars: { id: "C", mac_address: "c4:7c:8d:6d:7b:a0" },
+      }
+  - <<:
+      !include {
+        file: common/xiaomi_hhcc.yaml,
+        vars: { id: "D", mac_address: "c4:7c:8d:6d:79:d5" },
+      }
 
 graph:
   - id: temp_graph
