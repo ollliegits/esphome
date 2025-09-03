@@ -1,0 +1,72 @@
+esphome:
+  name: servo
+
+esp32:
+  board: az-delivery-devkit-v4
+  framework:
+    type: esp-idf
+
+# include shared components
+packages:
+  connectivity: !include common/connectivity.yaml
+
+# Enable logging
+logger:
+
+# PWM output for servo (pick the correct GPIO pin)
+output:
+  - platform: ledc
+    id: servo_pwm
+    pin: GPIO14
+    frequency: 50 Hz
+
+servo:
+  - id: my_servo
+    output: servo_pwm
+    # Adjust these so full travel matches your servo (typical ~2.5% to ~12%)
+    min_level: 2.5% # (Optional, percentage): The PWM duty cycle the minimum value (-100%) will map to. Defaults to 3%.
+    idle_level: 7.5% # (Optional, percentage): The PWM duty cycle the idle value (0%) will map to. This is also the state of the servo at startup. Defaults to 7.5%.
+    max_level: 12% # (Optional, percentage): The PWM duty cycle the maximum value (100%) will map to. Defaults to 12.0%.
+
+# Slider entity in Home Assistant: range -1 to 1
+number:
+  - platform: template
+    name: "Servo Control"
+    id: servo_control
+    optimistic: true
+    min_value: -1
+    max_value: 1
+    step: 0.05
+    restore_value: true
+    initial_value: 0
+    set_action:
+      - lambda: |-
+          id(my_servo).write(x);
+
+button:
+  - platform: template
+    name: "Servo -1"
+    on_press:
+      - number.to_min: servo_control
+
+  - platform: template
+    name: "Servo 0"
+    on_press:
+      - number.set:
+          id: servo_control
+          value: 0
+
+  - platform: template
+    name: "Servo 1"
+    on_press:
+      - number.to_max: servo_control
+
+  - platform: template
+    name: "Servo -"
+    on_press:
+      - number.decrement: servo_control
+
+  - platform: template
+    name: "Servo +"
+    on_press:
+      - number.increment: servo_control
