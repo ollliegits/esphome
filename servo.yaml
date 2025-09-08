@@ -34,8 +34,8 @@ number:
     name: "Servo Control"
     id: servo_control
     optimistic: true
-    min_value: -1
-    max_value: 1
+    min_value: -0.8
+    max_value: 0.8
     step: 0.05
     restore_value: true
     initial_value: 0
@@ -45,7 +45,7 @@ number:
 
 button:
   - platform: template
-    name: "Servo -1"
+    name: "Servo MIN"
     on_press:
       - number.to_min: servo_control
 
@@ -57,7 +57,7 @@ button:
           value: 0
 
   - platform: template
-    name: "Servo 1"
+    name: "Servo MAX"
     on_press:
       - number.to_max: servo_control
 
